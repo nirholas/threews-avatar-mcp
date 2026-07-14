@@ -160,7 +160,4 @@ Each selector maps to a real three.ws endpoint. Raw `model` URLs must be `https:
 
 ## License
 
-Copyright © 2026 nirholas. All rights reserved.
-
-This software is proprietary — see [LICENSE](./LICENSE). No rights are granted
-without the express written permission of the copyright owner.
+All rights reserved. See [LICENSE](LICENSE).
