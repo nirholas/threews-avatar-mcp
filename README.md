@@ -76,7 +76,7 @@ npx -y @modelcontextprotocol/inspector npx -y @three-ws/avatar-mcp
 
 Once connected, ask your client in plain language:
 
-> Render the avatar for @nirholas in the chat, dark background, auto-rotating.
+> Render the avatar for @three in the chat, dark background, auto-rotating.
 
 `render_avatar` returns three things so it looks great in every client:
 
@@ -86,7 +86,7 @@ Once connected, ask your client in plain language:
 
 ## Tools
 
-All three tools are free, read-only, and annotated (`readOnlyHint`, `idempotentHint`, `openWorldHint`) so hosts can run them without confirmation prompts. There is no x402 charge. Identify an avatar by **`id`** (UUID), **`handle`** (`nirholas` or `@nirholas`), or a raw **`model`** GLB URL.
+All three tools are free, read-only, and annotated (`readOnlyHint`, `idempotentHint`, `openWorldHint`) so hosts can run them without confirmation prompts. There is no x402 charge. Identify an avatar by **`id`** (UUID), **`handle`** (`three` or `@three`), or a raw **`model`** GLB URL.
 
 | Tool                | Selectors                 | What it does                                                                                                                                                                                                                                                                                                                                                                  |
 | ------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -102,13 +102,13 @@ All three tools are free, read-only, and annotated (`readOnlyHint`, `idempotentH
 
 ```jsonc
 // render_avatar — live, rotatable avatar in chat
-{ "handle": "nirholas", "background": "dark", "auto_rotate": true }
+{ "handle": "three", "background": "dark", "auto_rotate": true }
 
 // avatar_embed_code — paste into any website
-{ "id": "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f", "height": 560 }
+{ "id": "8b1340c1-a3f5-4743-b898-a226056f30e0", "height": 560 }
 
 // get_avatar — metadata
-{ "handle": "@nirholas" }
+{ "handle": "@three" }
 ```
 
 Every tool also advertises an `outputSchema` describing its `structuredContent`, so typed clients can consume results without re-parsing the text blocks.
@@ -147,7 +147,7 @@ Each selector maps to a real three.ws endpoint. Raw `model` URLs must be `https:
 - Sibling package: [`@three-ws/avatar-agent`](https://www.npmjs.com/package/@three-ws/avatar-agent) — full 3D AI agent (wallet, voice, pump.fun)
 - Changelog: https://three.ws/changelog
 - Issues: https://github.com/nirholas/three.ws/issues
-- License: Apache-2.0 — see [LICENSE](./LICENSE)
+- License: All rights reserved. See [LICENSE](./LICENSE).
 
 ---
 

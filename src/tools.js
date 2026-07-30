@@ -16,6 +16,7 @@ import {
 	viewerUrl,
 	iframeSnippet,
 	modelViewerHtml,
+	safeBackground,
 } from './threews.js';
 import { UI_TOOL_META } from './ui.js';
 
@@ -106,7 +107,9 @@ export function buildTools() {
 			},
 			handler: async (args) => {
 				const avatar = await resolveAvatar(args);
-				const background = args.background || 'transparent';
+				// Clamped, not just defaulted: nothing validates inputSchema and this
+				// value reaches a <style> block downstream.
+				const background = safeBackground(args.background);
 				const height = args.height || 480;
 				const autoRotate = args.auto_rotate !== false;
 

@@ -10,6 +10,12 @@ import assert from 'node:assert/strict';
 import { buildTools } from '../src/tools.js';
 import { buildPrompts, avatarSelector } from '../src/prompts.js';
 import { UI_RESOURCE_URI, UI_MIME_TYPE, UI_RESOURCE_META } from '../src/ui.js';
+import {
+	iframeSnippet,
+	modelViewerHtml,
+	safeBackground,
+	safeCssLength,
+} from '../src/threews.js';
 
 const EXPECTED_TOOLS = ['render_avatar', 'avatar_embed_code', 'get_avatar'];
 
@@ -93,6 +99,34 @@ test('outputSchemas mirror the structuredContent each handler builds', () => {
 	assert.ok(!getAvatar.required.includes('owner'), 'owner must stay optional');
 	// id is null for raw-model renders — advertised as nullable, never omitted.
 	assert.deepEqual(byName.get('render_avatar').outputSchema.properties.id.type, ['string', 'null']);
+});
+
+test('background is clamped to the declared enum, never inlined verbatim', () => {
+	assert.equal(safeBackground('dark'), 'dark');
+	assert.equal(safeBackground('light'), 'light');
+	assert.equal(safeBackground(undefined), 'transparent');
+	// The low-level Server does not validate inputSchema, so an off-enum value
+	// really can arrive here. It must never survive into the <style> block.
+	const attack = 'red}</style><script>alert(1)</script><style>{';
+	assert.equal(safeBackground(attack), 'transparent');
+	const html = modelViewerHtml({ model_url: 'https://three.ws/a.glb', background: attack });
+	assert.ok(!html.includes('<script>alert(1)</script>'), 'CSS context must not be escapable');
+	assert.match(html, /background:transparent;/);
+});
+
+test('iframe width and height are clamped to CSS lengths', () => {
+	assert.equal(safeCssLength('100%', '100%'), '100%');
+	assert.equal(safeCssLength('480px', '100%'), '480px');
+	assert.equal(safeCssLength(480, '100%'), '480');
+	assert.equal(safeCssLength('100% " onload="alert(1)', '100%'), '100%');
+
+	const snippet = iframeSnippet('https://three.ws/avatar-embed.html?id=x', {
+		width: '100%" onload="alert(1)',
+		height: '480"><script>alert(1)</script>',
+	});
+	assert.ok(!snippet.includes('onload='), 'attribute context must not be escapable');
+	assert.ok(!snippet.includes('<script>'), 'attribute context must not be escapable');
+	assert.match(snippet, /width="100%" height="480"/);
 });
 
 test('showcase-avatar prompt enumerates with its required argument', () => {

@@ -43,6 +43,27 @@ export function isSafeModelUrl(url) {
 	return false;
 }
 
+// Backdrops the embed/viewer/model-viewer surfaces accept. The low-level MCP
+// Server advertises inputSchema but never validates it, so an enum declared in
+// the schema is not a guarantee: a host (or a prompt-injected model) can send
+// any string. `background` lands inside a <style> block, so an unconstrained
+// value can close the tag and inject markup. Clamp it here, at the boundary.
+const BACKGROUNDS = new Set(['transparent', 'dark', 'light']);
+
+export function safeBackground(background) {
+	return BACKGROUNDS.has(background) ? background : 'transparent';
+}
+
+// `width` is a free-form CSS length that lands in an HTML attribute, so the
+// same untrusted-input rule applies. Accept only a plain number or a number
+// with a CSS unit; anything else falls back to the documented default.
+const CSS_LENGTH = /^\d+(?:\.\d+)?(?:%|px|em|rem|vw|vh|ch)?$/;
+
+export function safeCssLength(value, fallback) {
+	const v = String(value ?? '').trim();
+	return CSS_LENGTH.test(v) ? v : fallback;
+}
+
 function assertSafeModelUrl(url) {
 	if (!isSafeModelUrl(url)) {
 		throw new ThreewsError(
@@ -139,7 +160,7 @@ export async function renderImage(
 		avatar: id,
 		scene,
 		size: String(size),
-		bg: background,
+		bg: safeBackground(background),
 		format,
 	});
 	const url = `${base}/api/avatar/render?${params}`;
@@ -156,7 +177,7 @@ export function embedUrl({ id, handle, model, background = 'transparent', idle =
 	if (id) params.set('id', id);
 	else if (handle) params.set('handle', handle.replace(/^@/, ''));
 	else if (model) params.set('model', assertSafeModelUrl(model));
-	params.set('bg', background);
+	params.set('bg', safeBackground(background));
 	params.set('idle', idle ? 'on' : 'off');
 	if (overlay) params.set('overlay', '1');
 	if (animation) params.set('animation', animation);
@@ -170,7 +191,7 @@ export function viewerUrl({ model_url, camera = 'three-quarter', background = 't
 	const params = new URLSearchParams({
 		src: model_url,
 		camera,
-		background,
+		background: safeBackground(background),
 		auto_rotate: autoRotate ? '1' : '0',
 	});
 	return `${base}/viewer?${params}`;
@@ -179,9 +200,10 @@ export function viewerUrl({ model_url, camera = 'three-quarter', background = 't
 // A ready-to-paste iframe that embeds the live avatar anywhere — the
 // "embed a 3D avatar as easily as a YouTube video" snippet.
 export function iframeSnippet(embed, { width = '100%', height = 480 } = {}) {
-	const h = typeof height === 'number' ? `${height}` : height;
+	const w = safeCssLength(width, '100%');
+	const h = safeCssLength(height, '480');
 	return (
-		`<iframe src="${embed}" width="${width}" height="${h}" ` +
+		`<iframe src="${embed}" width="${w}" height="${h}" ` +
 		`style="border:0;border-radius:16px;overflow:hidden" ` +
 		`allow="camera; microphone; xr-spatial-tracking; fullscreen" allowfullscreen ` +
 		`title="three.ws avatar"></iframe>`
@@ -193,7 +215,7 @@ export function iframeSnippet(embed, { width = '100%', height = 480 } = {}) {
 // rotatable 3D avatar inline.
 export function modelViewerHtml({ model_url, name = 'Avatar', background = 'transparent', height = 480, cameraOrbit = '0deg 80deg 2m', autoRotate = true }) {
 	assertSafeModelUrl(model_url);
-	const bg = background === 'transparent' ? 'transparent' : background;
+	const bg = safeBackground(background);
 	return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
