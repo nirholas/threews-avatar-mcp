@@ -161,3 +161,10 @@ Each selector maps to a real three.ws endpoint. Raw `model` URLs must be `https:
 ## License
 
 All rights reserved. See [LICENSE](LICENSE).
+
+## Documentation
+
+Full documentation site: **https://nirholas.github.io/threews-avatar-mcp/**
+
+- [Getting started](docs/getting-started.md) covers install and first run.
+- [Examples](docs/examples.md) has copy-paste snippets.
