@@ -1,0 +1,20 @@
+# @three-ws/avatar-mcp
+
+> MCP server for three.ws 3D avatars by three.ws — render a live, rotatable on-chain avatar inline (interactive MCP App), get a paste-anywhere embed iframe, or fetch avatar metadata. Free, no API key.
+
+@three-ws/avatar-mcp is a Model Context Protocol server from three.ws. Install: `npx -y @three-ws/avatar-mcp`.
+
+## Docs
+
+- [README](https://github.com/nirholas/threews-avatar-mcp/blob/main/README.md): install, configuration, full reference
+- [Documentation site](https://nirholas.github.io/threews-avatar-mcp/): the README as a web page
+- [Full text for LLMs](https://nirholas.github.io/threews-avatar-mcp/llms-full.txt): README inlined
+- [AGENTS.md](https://github.com/nirholas/threews-avatar-mcp/blob/main/AGENTS.md): guidance for coding agents
+
+## Project
+
+- [Source](https://github.com/nirholas/threews-avatar-mcp)
+- [npm](https://www.npmjs.com/package/@three-ws/avatar-mcp)
+- [three.ws](https://three.ws): the platform this is part of
+- [Issues](https://github.com/nirholas/threews-avatar-mcp/issues)
+- [MCP Registry](https://registry.modelcontextprotocol.io/?q=io.github.nirholas%2Fthreews-avatar)
