@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "avatar": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@three-ws/avatar-mcp"
+      ]
+    }
+  }
+}
